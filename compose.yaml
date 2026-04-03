@@ -1,0 +1,39 @@
+﻿version: '3.8'
+
+services:
+  expenses_api:
+    image: andr3ygabriel/expenses_api:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: expenses_api
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - db
+    networks:
+      - expenses_api
+  
+  db:
+    image: postgres:16
+    container_name: expenses_db
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - expenses_api
+
+networks:
+  expenses_api:
+    driver: bridge
+
+volumes:
+  postgres_data:
