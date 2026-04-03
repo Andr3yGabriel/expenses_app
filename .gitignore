@@ -1,6 +1,18 @@
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
-.env
+# expenses_app/.gitignore
+# .NET
+**/bin/
+**/obj/
+**/appsettings.Development.json
+
+# Rider / JetBrains
+**/.idea/
+
+# React
+**/node_modules/
+**/dist/
+**/.env
+**/.env.local
+
+# Sistema
+**/.DS_Store
+**/Thumbs.db
