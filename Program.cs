@@ -34,6 +34,8 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ConnectionContext>();
     dbContext.Database.Migrate();
+    
+    DatabaseSeeder.Seed(dbContext);
 }
 
 app.UseExceptionHandler(errorApp =>
