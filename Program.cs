@@ -22,7 +22,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Development", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
             .AllowAnyMethod());
@@ -59,6 +59,8 @@ app.UseExceptionHandler(errorApp =>
         await context.Response.WriteAsJsonAsync(new { Message = message });
     });
 });
+
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
