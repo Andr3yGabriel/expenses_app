@@ -21,7 +21,6 @@
       <Folder Include="Interfaces\" />
       <Folder Include="Repositories\" />
       <Folder Include="Services\" />
-      <Folder Include="ViewModels\" />
     </ItemGroup>
 
 </Project>
