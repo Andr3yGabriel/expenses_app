@@ -6,4 +6,5 @@ public interface ICategoryService
 {
     Task<IEnumerable<CategoryResponseDto>> GetAllAsync();
     Task<CategoryResponseDto> CreateAsync(CategoryRequestDto dto);
+    Task<CategoryTotalsResponseDto> GetTotalsAsync();
 }

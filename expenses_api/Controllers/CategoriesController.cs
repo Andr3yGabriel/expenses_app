@@ -24,4 +24,12 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var created = await categoryService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetAll), created);
     }
+
+    [HttpGet("totals")]
+    [ProducesResponseType(typeof(IEnumerable<CategoryTotalsResponseDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTotals()
+    {
+        var totals = await categoryService.GetTotalsAsync();
+        return Ok(totals);
+    }
 }
