@@ -1,6 +1,6 @@
 import {
   Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography
+  TableHead, TableRow, Paper, Typography, Box
 } from '@mui/material'
 import type { PersonTotals } from '../../types'
 
@@ -119,15 +119,31 @@ interface SummaryCardProps {
   bgClass:    string
 }
 
-function SummaryCard({ label, value, colorClass, bgClass }: SummaryCardProps) {
+function SummaryCard({ label, value, colorClass, bgClass: _ }: SummaryCardProps) {
+  const sxColor = 
+    colorClass === 'text-green-600' ? 'success.main' 
+    : colorClass === 'text-red-600'   ? 'error.main' 
+    : 'text.primary'
+
   return (
-    <div className={`rounded-lg p-4 ${bgClass} flex flex-col gap-1`}>
+    <Box
+      sx={{
+        borderRadius: 2,
+        p: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0.5,
+        bgcolor: 'background.paper',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
       <Typography variant="body2" color="text.secondary">
         {label}
       </Typography>
-      <Typography variant="h6" fontWeight="bold" className={colorClass}>
+      <Typography variant="h6" fontWeight="bold" color={sxColor}>
         {value}
       </Typography>
-    </div>
+    </Box>
   )
 }
