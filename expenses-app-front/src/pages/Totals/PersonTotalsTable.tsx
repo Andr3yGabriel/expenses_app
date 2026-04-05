@@ -19,7 +19,7 @@ const balanceColor = (value: number) => {
   return 'text-gray-500'
 }
 
-export default function TotalsTable({ totals }: Props) {
+export default function PersonTotalsTable({ totals }: Props) {
   if (totals.persons.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-10">

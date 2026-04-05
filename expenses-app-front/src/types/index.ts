@@ -61,6 +61,22 @@ export interface CategoryRequest {
   finalidade:  Finalidade;
 }
 
+export interface CategorySummary {
+  categoryId:   string;
+  description:  string;
+  finalidade:   Finalidade;
+  income: number;
+  expense: number;
+  balance: number;
+}
+
+export interface CategoryTotals {
+  categories:    CategorySummary[];
+  totalIncome:  number;
+  totalExpense: number;
+  netBalance:   number;
+}
+
 export interface TransactionRequest {
   description:     string;
   amount:          number;

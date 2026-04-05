@@ -1,4 +1,4 @@
-import type { Category, CategoryRequest } from '../types'
+import type { Category, CategoryRequest, CategoryTotals } from '../types'
 
 const BASE = 'http://localhost:8080/api/categories'
 
@@ -18,4 +18,10 @@ export const categoriesApi = {
     if (!res.ok) throw new Error('Erro ao criar categoria')
     return res.json()
   },
+
+  getTotals: async (): Promise<CategoryTotals> => {
+      const res = await fetch(`${BASE}/totals`)
+      if (!res.ok) throw new Error('Erro ao buscar totais por categoria')
+      return res.json()
+  }
 }
