@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import {
   Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography, Box
+  TableHead, TableRow, Paper, Typography, Box, ToggleButton, ToggleButtonGroup
 } from '@mui/material'
+import TableChartIcon from '@mui/icons-material/TableChart'
+import PieChartIcon from '@mui/icons-material/PieChart'
 import type { PersonTotals } from '../../types'
+import PersonTotalsChart from './PersonTotalsChart'
 
 interface Props {
   totals: PersonTotals
@@ -20,6 +24,8 @@ const balanceColor = (value: number) => {
 }
 
 export default function PersonTotalsTable({ totals }: Props) {
+  const [view, setView] = useState<'table' | 'chart'>('table')
+
   if (totals.persons.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-10">
@@ -30,83 +36,107 @@ export default function PersonTotalsTable({ totals }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <TableContainer component={Paper} elevation={2}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ '& th': { fontWeight: 'bold' } }}>
-              <TableCell>Pessoa</TableCell>
-              <TableCell align="right">Receitas</TableCell>
-              <TableCell align="right">Despesas</TableCell>
-              <TableCell align="right">Saldo</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* Linhas individuais por pessoa */}
-            {totals.persons.map((person) => (
-              <TableRow key={person.personId} hover>
-                <TableCell>{person.name}</TableCell>
-                <TableCell align="right" className="text-green-600">
-                  {formatBRL(person.income)}
-                </TableCell>
-                <TableCell align="right" className="text-red-600">
-                  {formatBRL(person.expense)}
-                </TableCell>
-                <TableCell align="right">
-                  <span className={`font-medium ${balanceColor(person.balance)}`}>
-                    {formatBRL(person.balance)}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {/* Linha separadora do totalizador geral */}
-            <TableRow sx={{ '& td': { borderTop: '2px solid', borderColor: 'divider' } }}>
-              <TableCell>
-                <Typography fontWeight="bold">
-                  Total Geral
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography fontWeight="bold" className="text-green-600">
-                  {formatBRL(totals.totalIncome)}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography fontWeight="bold" className="text-red-600">
-                  {formatBRL(totals.totalExpense)}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography fontWeight="bold" className={balanceColor(totals.netBalance)}>
-                  {formatBRL(totals.netBalance)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Cards de resumo abaixo da tabela */}
-      <div className="grid grid-cols-3 gap-4">
-        <SummaryCard
-          label="Total de Receitas"
-          value={formatBRL(totals.totalIncome)}
-          colorClass="text-green-600"
-          bgClass="bg-green-50"
-        />
-        <SummaryCard
-          label="Total de Despesas"
-          value={formatBRL(totals.totalExpense)}
-          colorClass="text-red-600"
-          bgClass="bg-red-50"
-        />
-        <SummaryCard
-          label="Saldo Líquido"
-          value={formatBRL(totals.netBalance)}
-          colorClass={balanceColor(totals.netBalance)}
-          bgClass="bg-gray-50"
-        />
+      {/* Toggle tabela / gráfico */}
+      <div className="flex justify-end">
+        <ToggleButtonGroup
+          value={view}
+          exclusive
+          size="small"
+          onChange={(_, val) => val && setView(val)}
+        >
+          <ToggleButton value="table">
+            <TableChartIcon fontSize="small" sx={{ mr: 0.5 }} />
+            Tabela
+          </ToggleButton>
+          <ToggleButton value="chart">
+            <PieChartIcon fontSize="small" sx={{ mr: 0.5 }} />
+            Gráfico
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
+
+      {view === 'chart'
+        ? <PersonTotalsChart totals={totals} />
+        : <>
+            <TableContainer component={Paper} elevation={2}>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ '& th': { fontWeight: 'bold' } }}>
+                    <TableCell>Pessoa</TableCell>
+                    <TableCell align="right">Receitas</TableCell>
+                    <TableCell align="right">Despesas</TableCell>
+                    <TableCell align="right">Saldo</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {/* Linhas individuais por pessoa */}
+                  {totals.persons.map((person) => (
+                    <TableRow key={person.personId} hover>
+                      <TableCell>{person.name}</TableCell>
+                      <TableCell align="right" className="text-green-600">
+                        {formatBRL(person.income)}
+                      </TableCell>
+                      <TableCell align="right" className="text-red-600">
+                        {formatBRL(person.expense)}
+                      </TableCell>
+                      <TableCell align="right">
+                        <span className={`font-medium ${balanceColor(person.balance)}`}>
+                          {formatBRL(person.balance)}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+
+                  {/* Linha separadora do totalizador geral */}
+                  <TableRow sx={{ '& td': { borderTop: '2px solid', borderColor: 'divider' } }}>
+                    <TableCell>
+                      <Typography fontWeight="bold">
+                        Total Geral
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontWeight="bold" className="text-green-600">
+                        {formatBRL(totals.totalIncome)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontWeight="bold" className="text-red-600">
+                        {formatBRL(totals.totalExpense)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontWeight="bold" className={balanceColor(totals.netBalance)}>
+                        {formatBRL(totals.netBalance)}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {/* Cards de resumo abaixo da tabela */}
+            <div className="grid grid-cols-3 gap-4">
+              <SummaryCard
+                label="Total de Receitas"
+                value={formatBRL(totals.totalIncome)}
+                colorClass="text-green-600"
+                bgClass="bg-green-50"
+              />
+              <SummaryCard
+                label="Total de Despesas"
+                value={formatBRL(totals.totalExpense)}
+                colorClass="text-red-600"
+                bgClass="bg-red-50"
+              />
+              <SummaryCard
+                label="Saldo Líquido"
+                value={formatBRL(totals.netBalance)}
+                colorClass={balanceColor(totals.netBalance)}
+                bgClass="bg-gray-50"
+              />
+            </div>
+          </>
+      }
     </div>
   )
 }
