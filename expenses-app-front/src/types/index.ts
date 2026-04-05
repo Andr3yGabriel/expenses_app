@@ -32,7 +32,6 @@ export interface Transaction {
   personId:        string;
   personName:      string;
   categoryId:      string;
-  categoryName:    string;
 }
 
 export interface PersonSummary {
